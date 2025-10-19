@@ -1,4 +1,4 @@
-from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlmodel.ext.asyncio.session import AsyncSession 
 from .book_schema import BookCreate, BookUpdate, BookRead
 from sqlmodel import select, desc
 from .book_models import Book
@@ -9,25 +9,25 @@ from app.common.handlers import APIResponse
 class BookController:
 
     @staticmethod
-    async def get_all_books(session: AsyncSession) -> list[BookRead]:
+    async def get_all_books_handler(session: AsyncSession) -> list[BookRead]:
         statement = select(Book).order_by(desc(Book.created_at))
-        result = await session.exec(statement)
-        return result.all()
+        result = await session.execute(statement)
+        return result.scalars().all()
 
     @staticmethod
-    async def get_book(book_id: str, session: AsyncSession) -> Book:
+    async def get_book_handler(book_id: str, session: AsyncSession) -> Book:
         if not book_id:
             raise NotFoundException("Book ID is required")
 
         statement = select(Book).where(Book.id == book_id)
-        result = await session.exec(statement)
+        result = await session.execute(statement)
         book = result.first()
         if not book:
             raise NotFoundException(f"Book with id {book_id} not found")
         return book
 
     @staticmethod
-    async def create_book(data: BookCreate, session: AsyncSession) -> BookRead:
+    async def create_book_handler(data: BookCreate, session: AsyncSession) -> BookRead:
         try:
             new_book = Book(**data.model_dump())
             session.add(new_book)
@@ -39,7 +39,7 @@ class BookController:
             raise UnprocessableEntity(f"Failed to create book: {str(e)}")
 
     @staticmethod
-    async def update_book(
+    async def update_book_handler(
         book_id: str, data: BookUpdate, session: AsyncSession
     ) -> BookRead:
         book_to_update = await BookController.get_book(book_id, session)
@@ -58,7 +58,7 @@ class BookController:
             raise UnprocessableEntity(f"Failed to update book: {str(e)}")
 
     @staticmethod
-    async def delete_book(book_id: str, session: AsyncSession):
+    async def delete_book_handler(book_id: str, session: AsyncSession):
         book_to_delete = await BookController.get_book(book_id, session)
 
         try:
