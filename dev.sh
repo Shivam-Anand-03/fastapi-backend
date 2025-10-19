@@ -4,16 +4,14 @@
 # Dev script to run FastAPI app
 # -------------------------------
 
-# Activate virtual environment if exists
+# Activate virtual environment if it exists
 if [ -d ".venv" ]; then
     echo "Activating virtual environment..."
     source .venv/bin/activate
 fi
 
-# Navigate to the app folder
-cd app || exit
+# Make sure we are in project root
+cd "$(dirname "$0")" || exit  # Change to script directory (project root)
 
-# Run FastAPI using uvicorn in development mode
-# --reload allows hot-reload on code changes
 echo "Starting FastAPI app in development mode..."
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
