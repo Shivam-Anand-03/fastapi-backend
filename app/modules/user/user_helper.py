@@ -3,11 +3,13 @@ from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 from app.common.exceptions.base import UnprocessableEntity
 from app.modules.user.user_models import User
+from .user_schema import UserRead
+from typing import Optional
 
 
 class UserHelper:
     @staticmethod
-    async def get_user_by_email(email: str, session: AsyncSession):
+    async def get_user_by_email(email: str, session: AsyncSession) -> Optional["User"]:
         """Fetch a user by email."""
         statement = select(User).where(User.email == email)
         result = await session.exec(statement)

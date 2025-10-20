@@ -1,6 +1,7 @@
 from datetime import timedelta
 import jwt
 from ..utils.datetime import utcnow
+from ..schemas import TokenModel
 
 
 class JwtServices:
@@ -12,9 +13,9 @@ class JwtServices:
     def create_tokens(
         self,
         user_data: dict,
-        access_expiry: timedelta = timedelta(minutes=15),
+        access_expiry: timedelta = timedelta(days=1),
         refresh_expiry: timedelta = timedelta(days=7),
-    ):
+    ) -> TokenModel:
         """Create both access and refresh tokens"""
         now = utcnow()
 
@@ -30,7 +31,11 @@ class JwtServices:
             refresh_payload, self.refresh_secret, algorithm=self.algorithm
         )
 
-        return {"access_token": access_token, "refresh_token": refresh_token}
+        return {
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "token_type": "bearer",
+        }
 
     def decode_token(self, token: str, token_type: str = "access"):
         """Decode access or refresh token"""
