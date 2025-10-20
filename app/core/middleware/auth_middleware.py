@@ -1,4 +1,3 @@
-# auth_middleware.py
 from fastapi import Request
 from pydantic import ValidationError
 from ...common.services.jwt_services import JwtServices
@@ -12,7 +11,6 @@ class AuthMiddleware:
         self.jwt_service = jwt_service
 
     async def require_auth(self, request: Request) -> SessionModel:
-        """Validate JWT from header or cookies and attach session data to request."""
         token = self._extract_token(request)
         payload = self.jwt_service.decode_token(token, token_type="access")
 
@@ -25,7 +23,6 @@ class AuthMiddleware:
         return session_data
 
     def _extract_token(self, request: Request) -> str:
-        """Extract token from Authorization header or cookies."""
         auth_header = request.headers.get("Authorization")
         if auth_header and auth_header.startswith("Bearer "):
             return auth_header.split(" ")[1]
