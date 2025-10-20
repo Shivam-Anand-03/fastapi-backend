@@ -39,13 +39,14 @@ class BookController:
             raise UnprocessableEntity(f"Failed to create book: {str(e)}")
 
     @staticmethod
-    async def delete_book_handler(book_id: str, session: AsyncSession):
+    async def delete_book_handler(
+        book_id: str, session: AsyncSession
+    ) -> APIResponse[None]:
         book_to_delete = await BookController.get_book_handler(book_id, session)
-
         try:
             await session.delete(book_to_delete)
             await session.commit()
-            return APIResponse("Book deleted successfully")
+            return APIResponse(message="Book deleted successfully")
         except Exception as e:
             await session.rollback()
             raise UnprocessableEntity(f"Failed to delete book: {str(e)}")
