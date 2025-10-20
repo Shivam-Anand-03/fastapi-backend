@@ -18,6 +18,7 @@ class User(SQLModel, table=True):
     last_name: str
     username: str
     email: str
+    password: str
     is_verified: bool = Field(default=False)
     created_at: datetime = Field(
         sa_column=Column(
