@@ -1,10 +1,9 @@
 from typing import AsyncGenerator
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
-from app.common.settings import settings
-from app.modules.book.book_models import Book
+from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.orm import sessionmaker
+from app.common.settings import settings
 
 
 class DatabaseConnect:
@@ -17,9 +16,11 @@ class DatabaseConnect:
         echo=True,
     )
 
-    # Async session factory
+    # ✅ Use SQLModel's AsyncSession here
     SessionLocal = sessionmaker(
-        bind=engine, class_=AsyncSession, expire_on_commit=False
+        bind=engine,
+        class_=AsyncSession,
+        expire_on_commit=False,
     )
 
     @classmethod

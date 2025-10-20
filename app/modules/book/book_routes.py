@@ -27,7 +27,7 @@ async def create_book(
     return await BookController.create_book_handler(payload, session)
 
 
-@book_router.put("/{book_id}", response_model=BookRead)
+@book_router.put("/{book_id}")
 async def update_book(
     book_id: str,
     payload: BookUpdate,
