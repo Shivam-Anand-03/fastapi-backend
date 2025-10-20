@@ -1,14 +1,16 @@
 from typing import AsyncGenerator
-from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import SQLAlchemyError
 from app.common.settings import settings
+from sqlalchemy import text
 
 
 class DatabaseConnect:
     """
     Async database connection using SQLModel + SQLAlchemy.
+    Alembic handles migrations; no need for create_all().
     """
 
     engine = create_async_engine(
@@ -16,7 +18,6 @@ class DatabaseConnect:
         echo=True,
     )
 
-    # ✅ Use SQLModel's AsyncSession here
     SessionLocal = sessionmaker(
         bind=engine,
         class_=AsyncSession,
@@ -24,10 +25,16 @@ class DatabaseConnect:
     )
 
     @classmethod
-    async def init_db(cls) -> None:
-        async with cls.engine.begin() as conn:
-            await conn.run_sync(SQLModel.metadata.create_all)
-        print("✅ Database initialized successfully.")
+    async def test_connection(cls) -> None:
+        """
+        Test DB connection and print success only if reachable.
+        """
+        try:
+            async with cls.engine.connect() as conn:
+                await conn.execute(text("SELECT 1"))
+            print("✅ Database connection successful.")
+        except SQLAlchemyError as e:
+            print(f"❌ Failed to connect to database: {e}")
 
     @classmethod
     async def get_session(cls) -> AsyncGenerator[AsyncSession, None]:
