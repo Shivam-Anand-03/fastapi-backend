@@ -7,7 +7,7 @@ from app.core.database import DatabaseConnect
 user_router = APIRouter(prefix="/user", tags=["Auth"])
 
 
-@user_router.post("/signup", response_model=list[UserRead])
+@user_router.post("/signup")
 async def signup_user(
     payload: UserCreate, session: AsyncSession = Depends(DatabaseConnect.get_session)
 ):
