@@ -45,3 +45,15 @@ class DuplicateValueException(CustomException):
     code = HTTPStatus.UNPROCESSABLE_ENTITY
     error_code = HTTPStatus.UNPROCESSABLE_ENTITY
     message = HTTPStatus.UNPROCESSABLE_ENTITY.description
+
+
+class TokenExpiredException(CustomException):
+    code = 451
+    error_code = 451
+    message = "Token has expired"
+
+
+class TokenNotPresentException(CustomException):
+    code = 498  
+    error_code = 498
+    message = "Token not provided"

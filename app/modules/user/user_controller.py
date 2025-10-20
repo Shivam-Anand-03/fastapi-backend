@@ -1,6 +1,10 @@
-from fastapi import Response
+from fastapi import Response, Request
 from sqlmodel.ext.asyncio.session import AsyncSession
-from ...common.exceptions.base import UnprocessableEntity
+from ...common.exceptions.base import (
+    UnprocessableEntity,
+    UnauthorizedException,
+    TokenNotPresentException,
+)
 from ...common.handlers import APIResponse
 from .user_models import User
 from .user_helper import UserHelper
@@ -61,4 +65,25 @@ class UserController:
 
         return APIResponse(
             message="Login successful", data={"acess_token": tokens["access_token"]}
+        )
+
+    @classmethod
+    async def refresh_token_handler(cls, request: Request, response: Response):
+        token = request.cookies.get("refresh_token")
+        decoded = cls.jwt_service.decode_token(token, token_type="refresh")
+
+        user_id = decoded.get("user_id")
+        email = decoded.get("email")
+        if not user_id or not email:
+            raise UnauthorizedException("Invalid token payload.")
+
+        user_session = SessionModel(user_id=user_id, email=email)
+
+        tokens = cls.jwt_service.create_tokens(user_data=user_session)
+
+        CookieManager.set_jwt_cookies(response, tokens)
+
+        return APIResponse(
+            message="Token refreshed successfully",
+            data={"access_token": tokens["access_token"]},
         )

@@ -2,6 +2,7 @@ from datetime import timedelta
 import jwt
 from ..utils.datetime import utcnow
 from ..schemas import TokenModel, SessionModel
+from ...common.exceptions import UnauthorizedException
 
 
 class JwtServices:
@@ -38,27 +39,12 @@ class JwtServices:
             "token_type": "bearer",
         }
 
-    def decode_token(self, token: str, token_type: str = "access"):
+    def decode_token(self, token: str, token_type: str = "access") -> dict:
         secret = self.access_secret if token_type == "access" else self.refresh_secret
         try:
             payload = jwt.decode(token, secret, algorithms=[self.algorithm])
-            return payload
+            return {"payload": payload, "is_expired": False}
         except jwt.ExpiredSignatureError:
-            return f"{token_type.capitalize()} token expired"
+            return {"payload": None, "is_expired": True}
         except jwt.InvalidTokenError:
-            return f"Invalid {token_type} token"
-
-
-# if __name__ == "__main__":
-#     jwt_service = JwtServices("access-secret-key", "refresh-secret-key")
-
-#     # Create a SessionModel instance
-#     user = SessionModel(user_id="223", username="shivam")
-
-#     tokens = jwt_service.create_tokens(user)
-#     print("Tokens:", tokens)
-
-#     print("Decoded Access:", jwt_service.decode_token(tokens["access_token"], "access"))
-#     print(
-#         "Decoded Refresh:", jwt_service.decode_token(tokens["refresh_token"], "refresh")
-#     )
+            raise UnauthorizedException(f"Invalid {token_type} token")

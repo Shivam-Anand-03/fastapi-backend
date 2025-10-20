@@ -7,7 +7,6 @@ from app.core.router import root_router
 
 @asynccontextmanager
 async def life_span(app: FastAPI):
-    print("🔌 Connecting to database...")
     await DatabaseConnect.test_connection()
     try:
         yield

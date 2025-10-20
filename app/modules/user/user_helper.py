@@ -15,6 +15,12 @@ class UserHelper:
         result = await session.exec(statement)
         return result.first()
 
+    async def get_user_by_id(user_id: str, session: AsyncSession) -> Optional["User"]:
+        """Fetch a user by id."""
+        statement = select(User).where(User.id == user_id)
+        result = await session.exec(statement)
+        return result.first()
+
     @staticmethod
     async def user_exists(email: str, session: AsyncSession) -> bool:
         """Check if a user with this email already exists."""
