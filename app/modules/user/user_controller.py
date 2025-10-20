@@ -1,13 +1,14 @@
 from fastapi import Response
-from app.common.exceptions.base import UnprocessableEntity
-from app.common.handlers import APIResponse
+from sqlmodel.ext.asyncio.session import AsyncSession
+from ...common.exceptions.base import UnprocessableEntity
+from ...common.handlers import APIResponse
 from .user_models import User
 from .user_helper import UserHelper
-from sqlmodel.ext.asyncio.session import AsyncSession
 from .user_schema import UserCreate, UserLogin
 from ...common.services.jwt_services import JwtServices
 from ...common.settings import settings
 from ...common.utils import CookieManager
+from ...common.schemas import SessionModel
 
 
 class UserController:
@@ -42,7 +43,7 @@ class UserController:
     ):
         existing_user = await UserHelper.get_user_by_email(payload.email, session)
         if not existing_user:
-            raise UnprocessableEntity(f"User does not exist with {payload.email} mail")
+            raise UnprocessableEntity(f"User does not exist with {payload.email} email")
 
         is_correct_password = UserHelper.check_password(
             payload.password, existing_user.password
@@ -50,12 +51,14 @@ class UserController:
         if not is_correct_password:
             raise UnprocessableEntity("Password provided is wrong")
 
-        tokens = cls.jwt_service.create_tokens(
-            user_data={"user_id": str(existing_user.id), "email": existing_user.email}
+        user_session = SessionModel(
+            user_id=str(existing_user.id), email=existing_user.email
         )
+
+        tokens = cls.jwt_service.create_tokens(user_data=user_session)
 
         CookieManager.set_jwt_cookies(response, tokens)
 
         return APIResponse(
-            message="Login successful", data={"token_type": tokens["token_type"]}
+            message="Login successful", data={"acess_token": tokens["access_token"]}
         )
