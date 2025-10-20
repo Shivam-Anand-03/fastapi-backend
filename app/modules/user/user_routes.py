@@ -31,3 +31,8 @@ async def refresh_token(
     response: Response = None,
 ):
     return await UserController.refresh_token_handler(request, response)
+
+
+@user_router.get("/user-info")
+async def user_info(user: AuthenticatedUser = Depends(authenticate_user)):
+    return {"user_id": user.user_id}
