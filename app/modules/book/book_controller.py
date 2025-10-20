@@ -55,10 +55,16 @@ class BookController:
         book_id: str, data: BookUpdate, session: AsyncSession
     ) -> BookRead:
         book_to_update = await BookController.get_book_handler(book_id, session)
+        print(f"book_to_update === {book_to_update}")
         try:
-            update_data = data.model_dump()
+            update_data = data.model_dump(exclude_unset=True)
+
+            if not update_data:
+                print("No fields to update.")
 
             for key, value in update_data.items():
+                old_value = getattr(book_to_update, key)
+                print(f"Updating {key}: {old_value} -> {value}")
                 setattr(book_to_update, key, value)
 
             await session.commit()

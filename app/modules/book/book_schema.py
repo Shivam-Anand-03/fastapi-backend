@@ -17,11 +17,11 @@ class BookCreate(BookBase):
 
 
 class BookUpdate(BaseModel):
-    title: Optional[str] = None
-    author: Optional[str] = None
-    publisher: Optional[str] = None
-    page_count: Optional[int] = None
-    language: Optional[str] = None
+    title: Optional[str]
+    author: Optional[str]
+    publisher: Optional[str]
+    page_count: Optional[int]
+    language: Optional[str]
 
 
 class BookRead(BookBase):
