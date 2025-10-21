@@ -12,10 +12,10 @@ class Settings(BaseSettings):
     REDIS_HOST: str
     REDIS_PORT: int
     REDIS_PASSWORD: str
-    MAIL_USERNAME = (str,)
-    MAIL_PASSWORD = (str,)
-    MAIL_FROM = str
-    MAIL_SERVER = str
+    MAIL_USERNAME : str
+    MAIL_PASSWORD : str
+    MAIL_FROM : str
+    MAIL_SERVER : str
 
     model_config = SettingsConfigDict(env_file=ENV_PATH, env_file_encoding="utf-8")
 
