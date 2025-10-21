@@ -1,3 +1,5 @@
+<img width="1897" height="1080" alt="image" src="https://github.com/user-attachments/assets/a1423778-1505-481d-8bbb-d6c93e8190be" />
+
 # FastAPI Backend - Book Management System
 
 A modern, scalable FastAPI backend application for managing books and users with authentication, Redis caching, and PostgreSQL database integration.
