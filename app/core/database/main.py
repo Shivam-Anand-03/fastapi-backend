@@ -1,3 +1,6 @@
+import logging
+
+logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
 from typing import AsyncGenerator
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine
@@ -15,7 +18,6 @@ class DatabaseConnect:
 
     engine = create_async_engine(
         url=settings.DATABASE_URL,
-        echo=True,
     )
 
     SessionLocal = sessionmaker(
