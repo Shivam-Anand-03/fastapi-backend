@@ -9,6 +9,9 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     ACCESS_TOKEN_SECRET_KEY: str
     REFRESH_TOKEN_SECRET_KEY: str
+    REDIS_HOST: str
+    REDIS_PORT: int
+    REDIS_PASSWORD: str
 
     model_config = SettingsConfigDict(env_file=ENV_PATH, env_file_encoding="utf-8")
 
