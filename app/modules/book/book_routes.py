@@ -29,9 +29,9 @@ async def create_book(
     user: AuthenticatedUser = Depends(authenticate_user),
     session: AsyncSession = Depends(DatabaseConnect.get_session),
 ):
-    if user.role is not "ADMIN":
+    if user.role != "USER":
         raise RoleAccessException(
-            f"Role '{user.role}' does not have access. Required role: '{user.role}'."
+            f"Role '{user.role}' does not have access. Required role: 'USER'."
         )
 
     return await BookController.create_book_handler(payload, user.user_id, session)
