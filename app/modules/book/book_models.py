@@ -1,10 +1,13 @@
-from sqlmodel import Field, SQLModel, Column
+from sqlmodel import Field, SQLModel, Column, Relationship
 from datetime import datetime
 import uuid
 import sqlalchemy.dialects.postgresql as pg
 from sqlalchemy import DateTime
 from sqlalchemy.sql import func
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.modules.user.user_models import User
 
 
 class Book(SQLModel, table=True):
@@ -16,10 +19,13 @@ class Book(SQLModel, table=True):
     )
     title: str
     author: str
-    publisher: str | None = None
+    publisher: Optional[str] = None
     page_count: int
     language: str
+
     user_id: Optional[uuid.UUID] = Field(default=None, foreign_key="users.id")
+    user: Optional["User"] = Relationship(back_populates="books")
+
     created_at: datetime = Field(
         default_factory=datetime.utcnow,
         sa_column=Column(

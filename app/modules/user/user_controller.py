@@ -4,6 +4,7 @@ from ...common.exceptions.base import (
     UnprocessableEntity,
     TokenInavlidException,
 )
+from sqlmodel import select, desc
 from ...common.handlers import APIResponse
 from .user_models import User
 from .user_helper import UserHelper
@@ -100,3 +101,15 @@ class UserController:
             message="Token refreshed successfully",
             data={"access_token": tokens["access_token"]},
         )
+
+    @classmethod
+    async def get_user_info(user_id: str, session: AsyncSession):
+        existing_user = await UserHelper.get_user_by_id(user_id, session)
+        if not existing_user:
+            raise UnprocessableEntity(f"User does not exist")
+
+        statement = select(User).where(User.id == existing_user.id)
+        result = await session.exec(statement)
+        user = result.first()
+
+        return APIResponse("User data fetched", user)

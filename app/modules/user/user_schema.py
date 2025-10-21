@@ -1,8 +1,9 @@
 from enum import Enum
 from pydantic import BaseModel, EmailStr, Field
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 import uuid
+from ..book.book_models import Book
 
 
 class UserRole(str, Enum):
@@ -37,6 +38,7 @@ class UserRead(BaseModel):
     email: EmailStr
     is_verified: bool
     role: UserRole
+    books: List[Book]
     created_at: datetime
     updated_at: datetime
 

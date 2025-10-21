@@ -1,9 +1,13 @@
-from sqlmodel import Field, SQLModel, Column
+from sqlmodel import Field, SQLModel, Column, Relationship
 from datetime import datetime
 import uuid
 import sqlalchemy.dialects.postgresql as pg
 from sqlalchemy import DateTime
 from sqlalchemy.sql import func
+from typing import List, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.modules.book.book_models import Book
 
 
 class User(SQLModel, table=True):
@@ -20,9 +24,8 @@ class User(SQLModel, table=True):
     email: str
     password: str
     is_verified: bool = Field(default=False)
-    role: str = Field(
-        sa_column=Column(pg.VARCHAR, nullable=False, server_default="USER")
-    )
+    role: str = Field(sa_column=Column(pg.VARCHAR, nullable=False, server_default="USER"))
+    books: List["Book"] = Relationship(back_populates="user")
 
     created_at: datetime = Field(
         sa_column=Column(
