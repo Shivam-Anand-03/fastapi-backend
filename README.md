@@ -1,4 +1,6 @@
-<img width="1897" height="1080" alt="image" src="https://github.com/user-attachments/assets/a1423778-1505-481d-8bbb-d6c93e8190be" />
+
+<img width="1897" height="1080" alt="image" src="https://github.com/user-attachments/assets/6240b74a-07c5-4484-a81e-3caec1e01f3a" />
+
 
 # FastAPI Backend - Book Management System
 
