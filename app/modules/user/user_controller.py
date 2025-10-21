@@ -4,6 +4,7 @@ from ...common.exceptions.base import (
     UnprocessableEntity,
     TokenInavlidException,
 )
+from sqlalchemy.orm import selectinload
 from sqlmodel import select, desc
 from ...common.handlers import APIResponse
 from .user_models import User
@@ -103,13 +104,12 @@ class UserController:
         )
 
     @classmethod
-    async def get_user_info(cls, user_id: str, session: AsyncSession) -> UserRead:
+    async def get_user_info(cls, user_id: str, session: AsyncSession):
         existing_user = await UserHelper.get_user_by_id(user_id, session)
         if not existing_user:
             raise UnprocessableEntity(f"User does not exist")
 
-        statement = select(User).where(User.id == existing_user.id)
-        result = await session.exec(statement)
+        query = select(User).where(User.id == user_id)
+        result = await session.exec(query)
         user = result.first()
-
-        return APIResponse(message="User data fetched", data=user)
+        return user

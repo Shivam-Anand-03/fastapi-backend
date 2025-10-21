@@ -1,10 +1,10 @@
 from sqlmodel import Field, SQLModel, Column, Relationship
-from datetime import datetime
+from typing import Optional, TYPE_CHECKING
 import uuid
 import sqlalchemy.dialects.postgresql as pg
-from sqlalchemy import DateTime
+from sqlalchemy import ForeignKey, DateTime
+from datetime import datetime
 from sqlalchemy.sql import func
-from typing import Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.modules.user.user_models import User
@@ -23,7 +23,12 @@ class Book(SQLModel, table=True):
     page_count: int
     language: str
 
-    user_id: Optional[uuid.UUID] = Field(default=None, foreign_key="users.id")
+    user_id: Optional[uuid.UUID] = Field(
+        default=None,
+        sa_column=Column(
+            pg.UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL")
+        ),
+    )
     user: Optional["User"] = Relationship(back_populates="books")
 
     created_at: datetime = Field(
@@ -41,6 +46,3 @@ class Book(SQLModel, table=True):
             onupdate=func.now(),
         ),
     )
-
-    def __repr__(self):
-        return f"<Book {self.title}>"

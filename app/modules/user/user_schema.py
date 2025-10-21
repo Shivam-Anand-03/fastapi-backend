@@ -3,7 +3,7 @@ from pydantic import BaseModel, EmailStr, Field
 from typing import Optional, List
 from datetime import datetime
 import uuid
-from ..book.book_models import Book
+from ..book.book_schema import BookRead
 
 
 class UserRole(str, Enum):
@@ -38,7 +38,7 @@ class UserRead(BaseModel):
     email: EmailStr
     is_verified: bool
     role: UserRole
-    books: List[Book]
+    books: List[BookRead] = []
     created_at: datetime
     updated_at: datetime
 

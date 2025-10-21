@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Response, Request
 from app.core.database import DatabaseConnect
 from sqlalchemy.ext.asyncio import AsyncSession
 from .user_controller import UserController
-from .user_schema import UserCreate, UserLogin
+from .user_schema import UserCreate, UserLogin, UserRead
 from ...common.schemas import AuthenticatedUser
 from ...core.guards import authenticate_user
 

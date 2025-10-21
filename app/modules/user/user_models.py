@@ -24,9 +24,12 @@ class User(SQLModel, table=True):
     email: str
     password: str
     is_verified: bool = Field(default=False)
-    role: str = Field(sa_column=Column(pg.VARCHAR, nullable=False, server_default="USER"))
-    books: List["Book"] = Relationship(back_populates="user")
-
+    role: str = Field(
+        sa_column=Column(pg.VARCHAR, nullable=False, server_default="USER")
+    )
+    books: List["Book"] = Relationship(
+        back_populates="user", sa_relationship_kwargs={"lazy": "selectin"}
+    )
     created_at: datetime = Field(
         sa_column=Column(
             DateTime(timezone=True),
