@@ -27,9 +27,11 @@ class BookController:
         return book
 
     @staticmethod
-    async def create_book_handler(data: BookCreate, session: AsyncSession) -> BookRead:
+    async def create_book_handler(
+        data: BookCreate, user_id: str, session: AsyncSession
+    ) -> BookRead:
         try:
-            new_book = Book(**data.model_dump())
+            new_book = Book(**data.model_dump(), user_id=user_id)
             session.add(new_book)
             await session.commit()
             await session.refresh(new_book)

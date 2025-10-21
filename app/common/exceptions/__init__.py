@@ -8,6 +8,7 @@ from .base import (
     UnprocessableEntity,
     TokenInavlidException,
     TokenExpiredException,
+    RoleAccessException,
 )
 
 __all__ = [
@@ -20,4 +21,5 @@ __all__ = [
     "DuplicateValueException",
     "TokenInavlidException",
     "TokenExpiredException",
+    "RoleAccessException",
 ]

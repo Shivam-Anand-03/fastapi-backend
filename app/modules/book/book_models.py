@@ -4,6 +4,7 @@ import uuid
 import sqlalchemy.dialects.postgresql as pg
 from sqlalchemy import DateTime
 from sqlalchemy.sql import func
+from typing import Optional
 
 
 class Book(SQLModel, table=True):
@@ -18,13 +19,21 @@ class Book(SQLModel, table=True):
     publisher: str | None = None
     page_count: int
     language: str
+    user_id: Optional[uuid.UUID] = Field(default=None, foreign_key="users.id")
     created_at: datetime = Field(
         default_factory=datetime.utcnow,
-        sa_column=Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+        sa_column=Column(
+            DateTime(timezone=True), nullable=False, server_default=func.now()
+        ),
     )
     updated_at: datetime = Field(
         default_factory=datetime.utcnow,
-        sa_column=Column(DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
+        sa_column=Column(
+            DateTime(timezone=True),
+            nullable=False,
+            server_default=func.now(),
+            onupdate=func.now(),
+        ),
     )
 
     def __repr__(self):

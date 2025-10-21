@@ -17,6 +17,12 @@ class BadRequestException(CustomException):
     message = HTTPStatus.BAD_REQUEST.description
 
 
+class RoleAccessException(CustomException):
+    code = HTTPStatus.FORBIDDEN
+    error_code = HTTPStatus.FORBIDDEN
+    message = HTTPStatus.FORBIDDEN.description
+
+
 class NotFoundException(CustomException):
     code = HTTPStatus.NOT_FOUND
     error_code = HTTPStatus.NOT_FOUND
