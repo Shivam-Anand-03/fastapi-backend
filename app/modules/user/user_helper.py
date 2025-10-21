@@ -20,7 +20,7 @@ class UserHelper:
         """Fetch a user by id."""
         statement = select(User).where(User.id == user_id)
         result = await session.exec(statement)
-        user = result.scalar_one_or_none()
+        user = result.first()
         return user
 
     @staticmethod

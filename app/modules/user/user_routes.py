@@ -35,5 +35,11 @@ async def refresh_token(
 
 
 @user_router.get("/user-info")
-async def user_info(user: AuthenticatedUser = Depends(authenticate_user)):
-    return {"user_id": user.user_id, "user_role": user.role}
+async def user_info(
+    user: AuthenticatedUser = Depends(authenticate_user),
+    session: AsyncSession = Depends(DatabaseConnect.get_session),
+):
+    return await UserController.get_user_info(
+        user.user_id,
+        session=session,
+    )

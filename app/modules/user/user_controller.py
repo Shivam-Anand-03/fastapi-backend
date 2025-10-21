@@ -8,7 +8,7 @@ from sqlmodel import select, desc
 from ...common.handlers import APIResponse
 from .user_models import User
 from .user_helper import UserHelper
-from .user_schema import UserCreate, UserLogin
+from .user_schema import UserCreate, UserLogin, UserRead
 from ...common.services.jwt_services import JwtServices
 from ...common.settings import settings
 from ...common.utils import CookieManager
@@ -103,7 +103,7 @@ class UserController:
         )
 
     @classmethod
-    async def get_user_info(user_id: str, session: AsyncSession):
+    async def get_user_info(cls, user_id: str, session: AsyncSession) -> UserRead:
         existing_user = await UserHelper.get_user_by_id(user_id, session)
         if not existing_user:
             raise UnprocessableEntity(f"User does not exist")
@@ -112,4 +112,4 @@ class UserController:
         result = await session.exec(statement)
         user = result.first()
 
-        return APIResponse("User data fetched", user)
+        return APIResponse(message="User data fetched", data=user)
