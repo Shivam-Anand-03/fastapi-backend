@@ -1,7 +1,14 @@
+from enum import Enum
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 from datetime import datetime
 import uuid
+
+
+class UserRole(str, Enum):
+    USER = "USER"
+    ADMIN = "ADMIN"
+    OWNER = "OWNER"
 
 
 class UserCreate(BaseModel):
@@ -10,6 +17,7 @@ class UserCreate(BaseModel):
     username: str = Field(..., max_length=40)
     email: EmailStr
     password: str = Field(..., min_length=12)
+    role: UserRole
 
 
 class UserUpdate(BaseModel):
@@ -28,6 +36,7 @@ class UserRead(BaseModel):
     username: str
     email: EmailStr
     is_verified: bool
+    role: UserRole
     created_at: datetime
     updated_at: datetime
 

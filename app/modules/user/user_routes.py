@@ -4,14 +4,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from .user_controller import UserController
 from .user_schema import UserCreate, UserLogin
 from ...common.schemas import AuthenticatedUser
-from ...core.middleware import authenticate_user
+from ...core.guards import authenticate_user
 
 user_router = APIRouter(prefix="/user", tags=["Auth"])
 
 
 @user_router.post("/signup")
 async def signup_user(
-    payload: UserCreate, session: AsyncSession = Depends(DatabaseConnect.get_session)
+    payload: UserCreate,
+    session: AsyncSession = Depends(DatabaseConnect.get_session),
 ):
     return await UserController.signup_user_handler(payload, session)
 
@@ -35,4 +36,4 @@ async def refresh_token(
 
 @user_router.get("/user-info")
 async def user_info(user: AuthenticatedUser = Depends(authenticate_user)):
-    return {"user_id": user.user_id}
+    return {"user_id": user.user_id, "user_role": user.role}

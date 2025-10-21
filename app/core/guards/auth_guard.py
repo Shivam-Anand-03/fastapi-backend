@@ -59,7 +59,9 @@ def get_current_user(request: Request) -> AuthenticatedUser:
     user = getattr(request.state, "user", None)
     if not user:
         raise UnauthorizedException("User not authenticated")
-    return AuthenticatedUser(user_id=str(user.user_id), email=user.email)
+    return AuthenticatedUser(
+        user_id=str(user.user_id), email=user.email, role=user.role
+    )
 
 
 jwt_service = JwtServices(
