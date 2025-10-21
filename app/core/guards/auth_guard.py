@@ -5,12 +5,12 @@ from ...common.schemas import SessionModel, AuthenticatedUser
 from ...common.exceptions import (
     UnauthorizedException,
     TokenExpiredException,
-    TokenNotPresentException,
+    TokenInavlidException,
 )
 from ...common.settings import settings
 
 
-class AuthMiddleware:
+class AuthGuard:
     def __init__(self, jwt_service: JwtServices):
         self.jwt_service = jwt_service
 
@@ -23,7 +23,7 @@ class AuthMiddleware:
         )
 
         if not access_token or not refresh_token:
-            raise TokenNotPresentException("Access or Refresh token not provided.")
+            raise TokenInavlidException("Access or Refresh token not provided.")
 
         access_result = self.jwt_service.decode_token(access_token, token_type="access")
         if access_result["is_expired"]:
@@ -36,7 +36,7 @@ class AuthMiddleware:
         )
 
         if refresh_result["is_expired"]:
-            raise TokenNotPresentException("Refresh token is invalid.")
+            raise TokenInavlidException("Refresh token is invalid.")
 
         try:
             session_data = SessionModel(**access_result["payload"])
@@ -65,7 +65,7 @@ def get_current_user(request: Request) -> AuthenticatedUser:
 jwt_service = JwtServices(
     settings.ACCESS_TOKEN_SECRET_KEY, settings.REFRESH_TOKEN_SECRET_KEY
 )
-auth_middleware = AuthMiddleware(jwt_service=jwt_service)
+auth_middleware = AuthGuard(jwt_service=jwt_service)
 
 
 async def authenticate_user(request: Request) -> AuthenticatedUser:

@@ -9,6 +9,7 @@ class TokenModel(BaseModel):
 class SessionModel(BaseModel):
     user_id: str
     email: str
+    role: str
 
 
 class AuthenticatedUser(SessionModel):

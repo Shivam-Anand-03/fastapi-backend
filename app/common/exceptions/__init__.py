@@ -6,7 +6,7 @@ from .base import (
     NotFoundException,
     UnauthorizedException,
     UnprocessableEntity,
-    TokenNotPresentException,
+    TokenInavlidException,
     TokenExpiredException,
 )
 
@@ -18,6 +18,6 @@ __all__ = [
     "UnauthorizedException",
     "UnprocessableEntity",
     "DuplicateValueException",
-    "TokenNotPresentException",
+    "TokenInavlidException",
     "TokenExpiredException",
 ]

@@ -53,7 +53,7 @@ class TokenExpiredException(CustomException):
     message = "Token has expired"
 
 
-class TokenNotPresentException(CustomException):
-    code = 498  
+class TokenInavlidException(CustomException):
+    code = 498
     error_code = 498
     message = "Token not provided"
